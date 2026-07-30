@@ -31,9 +31,8 @@
   <div id="app-container" class="bg-transparent flex flex-col relative pb-20 mx-auto">
     
     <!-- 1. Intro Screen -->
-    <div id="intro-screen" class="cursor-pointer" onclick="document.getElementById('intro-screen').style.display='none'; document.getElementById('main-content').classList.remove('hidden'); document.getElementById('bg-audio').play();">
+    <div id="intro-screen" class="cursor-pointer">
       <div class="float-animation flex flex-col items-center">
-        <!-- FIXED: Cleaned image path -->
         <img src="hot_air_balloon_1785403225466.png" alt="Hot Air Balloon" class="w-48 h-48 object-contain mb-4">
         <h1 class="font-serif-title text-4xl text-mint text-center px-4">Happy BestFriend Day</h1>
         <p class="font-handwriting text-2xl text-sage mt-2">a delivery for you...</p>
@@ -55,14 +54,13 @@
         <i data-feather="chevron-left"></i>
       </button>
       <h2 class="font-ui font-semibold text-lg text-mint tracking-wide">BestFriend Day</h2>
-      <!-- FIXED: Empty button content added -->
       <button class="font-ui text-xs bg-mint text-white px-3 py-1.5 rounded-full font-medium shadow-sm hover:bg-sage transition-colors">
-        ♥ Besties
+        
       </button>
     </header>
 
-    <!-- Main Content (FIXED: Initially hidden until tap) -->
-    <main id="main-content" class="hidden px-4 py-8 space-y-16">
+    <!-- Main Content (Hidden until tapped) -->
+    <main id="main-content" class="px-4 py-8 space-y-16">
       
       <!-- 3. Hero Section -->
       <section class="flex flex-col items-center text-center relative pt-4">
@@ -86,7 +84,7 @@
       <section class="px-2">
         <div class="audio-player-widget p-4 flex flex-col gap-3">
           <div class="flex items-center gap-4">
-            <!-- FIXED: Cleaned image path -->
+            <!-- Using polaroid 1 as placeholder for album cover -->
             <img src="polaroid_1_1785403266761.png" alt="Cover" class="w-14 h-14 rounded-lg object-cover shadow-sm">
             <div class="flex-1">
               <p class="font-ui text-[10px] font-bold text-sage tracking-wider">NOW PLAYING</p>
@@ -218,8 +216,7 @@
 
     <!-- Sticky Mini Player -->
     <div id="mini-player">
-      <!-- FIXED: Cleaned image path -->
-      <img src="polaroid_1.png" class="w-8 h-8 rounded object-cover" alt="mini cover">
+      <img src="file:///C:/Users/Admin/.gemini/antigravity/brain/62b02b85-977d-435f-960d-f28e45472837/polaroid_1_1785403266761.png" class="w-8 h-8 rounded object-cover" alt="mini cover">
       <div class="flex-1 min-w-[120px]">
         <p class="font-ui text-xs font-bold text-dark truncate">Our Song</p>
         <div class="h-1 bg-mint/20 rounded-full mt-1 overflow-hidden">
