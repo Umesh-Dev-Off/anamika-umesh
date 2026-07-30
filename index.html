@@ -24,6 +24,31 @@
   <link rel="stylesheet" href="styles.css">
   <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
+<script>
+  function startExperience() {
+    const introScreen = document.getElementById('intro-screen');
+    const bgAudio = document.getElementById('bg-audio');
+
+    if (introScreen) {
+      // 1. Immediately disable pointer events so user clicks pass through
+      introScreen.style.pointerEvents = 'none';
+      introScreen.style.opacity = '0';
+
+      // 2. Remove from page layout after fade out
+      setTimeout(() => {
+        introScreen.style.display = 'none';
+      }, 500);
+    }
+
+    // 3. Play background audio safely
+    if (bgAudio) {
+      bgAudio.play().catch(err => {
+        console.log("Audio autoplay note:", err);
+      });
+    }
+  }
+</script>
+  
 </head>
 <body class="antialiased text-dark">
 
