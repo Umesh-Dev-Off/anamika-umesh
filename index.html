@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Anamika/Umesh ✿</title>
+  <meta name="description" content="A cute digital greeting for Friendship Day.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            mint: '#379383',
+            sage: '#5E9E90',
+            peach: '#EF8A5E',
+            offwhite: '#FAF8F5',
+            dark: '#1E293B',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="antialiased text-dark">
+
+  <!-- Mobile Wrapper -->
+  <div id="app-container" class="bg-transparent flex flex-col relative pb-20 mx-auto">
+    
+    <!-- 1. Intro Screen -->
+    <div id="intro-screen" class="cursor-pointer">
+      <div class="float-animation flex flex-col items-center">
+        <img src="hot_air_balloon_1785403225466.png" alt="Hot Air Balloon" class="w-48 h-48 object-contain mb-4">
+        <h1 class="font-serif-title text-4xl text-mint text-center px-4">Happy BestFriend Day</h1>
+        <p class="font-handwriting text-2xl text-sage mt-2">a delivery for you...</p>
+      </div>
+      
+      <div class="mt-12 bg-white rounded-2xl p-6 shadow-lg transform rotate-2 w-4/5 max-w-sm relative">
+        <div class="washi-tape"></div>
+        <p class="font-handwriting text-xl text-center">Hey You! I made a little something just for you... happy BestFriend day ✿</p>
+      </div>
+
+      <div class="absolute bottom-12 pulse-text font-ui text-sm tracking-widest text-peach font-bold">
+        TAP ANYWHERE TO BEGIN
+      </div>
+    </div>
+
+    <!-- 2. Navigation Header -->
+    <header class="sticky top-0 z-40 bg-[#E8F4F1]/90 backdrop-blur-md px-4 py-4 flex justify-between items-center border-b border-mint/10">
+      <button class="p-2 text-sage hover:bg-mint/10 rounded-full transition-colors">
+        <i data-feather="chevron-left"></i>
+      </button>
+      <h2 class="font-ui font-semibold text-lg text-mint tracking-wide">BestFriend Day</h2>
+      <button class="font-ui text-xs bg-mint text-white px-3 py-1.5 rounded-full font-medium shadow-sm hover:bg-sage transition-colors">
+        
+      </button>
+    </header>
+
+    <!-- Main Content (Hidden until tapped) -->
+    <main id="main-content" class="px-4 py-8 space-y-16">
+      
+      <!-- 3. Hero Section -->
+      <section class="flex flex-col items-center text-center relative pt-4">
+        <div class="inline-flex items-center gap-1.5 bg-peach/20 text-peach px-3 py-1 rounded-full text-xs font-bold mb-4 font-ui">
+          <i data-feather="sparkles" class="w-3 h-3"></i> HAPPY BESTFRIEND DAY
+        </div>
+        <h1 class="font-serif-title text-4xl text-dark mb-2 leading-tight">To My Favourite<br>Person Anamika</h1>
+        <div class="font-handwriting text-xl text-mint transform -rotate-3 mt-1 bg-mint/10 px-2 py-0.5 rounded">to the best one ✿</div>
+        
+        <div class="mt-8 relative">
+          <div class="washi-tape mint"></div>
+          <img src="4.png" alt="Cute Sticker" class="w-32 h-32 object-contain bg-white rounded-xl shadow-sm p-2 transform rotate-2">
+        </div>
+
+        <p class="font-handwriting text-xl text-sage mt-8 max-w-xs leading-relaxed">
+          I wanted to make something special just to remind you how much you mean to me.
+        </p>
+      </section>
+
+      <!-- 4. Audio Widget -->
+      <section class="px-2">
+        <div class="audio-player-widget p-4 flex flex-col gap-3">
+          <div class="flex items-center gap-4">
+            <!-- Using polaroid 1 as placeholder for album cover -->
+            <img src="polaroid_1_1785403266761.png" alt="Cover" class="w-14 h-14 rounded-lg object-cover shadow-sm">
+            <div class="flex-1">
+              <p class="font-ui text-[10px] font-bold text-sage tracking-wider">NOW PLAYING</p>
+              <h3 class="font-serif-title font-semibold text-dark text-lg leading-tight">What I Feel</h3>
+              <p class="font-ui text-xs text-mint">the one that's ours ✿</p>
+            </div>
+            <button id="main-play-btn" class="w-12 h-12 bg-mint text-white rounded-full flex items-center justify-center shadow-md hover:bg-sage transition-transform active:scale-95">
+              <i data-feather="play" class="ml-1 fill-current w-5 h-5"></i>
+            </button>
+          </div>
+          
+          <div class="flex items-center gap-2 mt-2">
+            <span id="time-current" class="font-ui text-[10px] text-sage font-medium w-8 text-right">0:00</span>
+            <input type="range" id="progress-bar" value="0" max="100" class="flex-1">
+            <span id="time-total" class="font-ui text-[10px] text-sage font-medium w-8">0:00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Memory Wall (3D Flips) -->
+      <section>
+        <div class="mb-6 px-2">
+          <h2 class="font-ui font-bold text-sm text-peach tracking-widest flex items-center gap-2">
+            <i data-feather="image" class="w-4 h-4"></i> THE MEMORY WALL
+          </h2>
+          <p class="font-handwriting text-xl text-sage mt-1">flip one over - every photo has something written on the back ✿</p>
+        </div>
+
+        <div class="memory-wall-grid">
+          <!-- Card 1 -->
+          <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <div class="pin"></div>
+                <img src="5.png" alt="Memory 1">
+                <p class="font-handwriting mt-2 text-dark font-semibold">love u</p>
+              </div>
+              <div class="flip-card-back shadow-md rounded-xl border-2 border-mint/20">
+                <p class="font-handwriting text-xl text-dark leading-relaxed">The day u texted me i fell in love with this Picture on whatsapp.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <div class="pin" style="background:#379383;"></div>
+                <img src="3.png" alt="Memory 2">
+                <p class="font-handwriting mt-2 text-dark font-semibold">loveeeeee uuuuuu</p>
+              </div>
+              <div class="flip-card-back shadow-md rounded-xl border-2 border-mint/20">
+                <p class="font-handwriting text-xl text-dark leading-relaxed">Baddie OMGGGGGG !!!!.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <div class="pin" style="background:#EF8A5E;"></div>
+                <img src="1.PNG.png" alt="Memory 3">
+                <p class="font-handwriting mt-2 text-dark font-semibold">loveeeeeeeeeee uuuuuuuuuuuuuu</p>
+              </div>
+              <div class="flip-card-back shadow-md rounded-xl border-2 border-mint/20">
+                <p class="font-handwriting text-xl text-dark leading-relaxed">Everything looks prettier when you're around. Fact.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Card 4 -->
+          <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <div class="pin" style="background:#5E9E90;"></div>
+                <img src="2.png" alt="Memory 4">
+                <p class="font-handwriting mt-2 text-dark font-semibold">Loveeeeeeeeeeeeeeeeeeeeee uuuuuuuuuuuuuuuuuuuuuuuuuuuuu</p>
+              </div>
+              <div class="flip-card-back shadow-md rounded-xl border-2 border-mint/20">
+                <p class="font-handwriting text-xl text-dark leading-relaxed">I wanna hug u againnnnnn Can't wait .</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Six Little Truths (Scratch Cards) -->
+      <section class="mt-12">
+        <div class="mb-4 px-2">
+          <h2 class="font-ui font-bold text-sm text-mint tracking-widest flex items-center gap-2">
+            <i data-feather="heart" class="w-4 h-4"></i> SIX LITTLE TRUTHS
+          </h2>
+          <p class="font-handwriting text-xl text-sage mt-1">scratch these open - rub each one to see what's under ✿</p>
+          <p class="font-ui text-xs font-semibold text-peach mt-2 bg-peach/10 inline-block px-2 py-1 rounded-full"><span id="scratch-counter">0</span> of 6 uncovered</p>
+        </div>
+
+        <div class="scratch-grid" id="scratch-board">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- 7. Final Note -->
+      <section class="px-4 pb-12 mt-16">
+        <div class="lined-paper transform -rotate-1">
+          <div class="washi-tape" style="top: -12px; left: 30%; transform: rotate(2deg);"></div>
+          
+          <h3 class="font-serif-title text-2xl text-dark mb-4">A Note For You,</h3>
+          <p class="font-handwriting text-2xl text-sage">
+            Thank you for being the most amazing friend someone could ask for. Through all the chaos, the late nights, the silly jokes, and everything in between... I'm just really glad you exist.
+          </p>
+          <p class="font-handwriting text-2xl text-sage mt-4">
+            Never change Always be my bestieeee.
+          </p>
+          
+          <div class="mt-8 flex flex-col items-end">
+            <p class="font-handwriting text-xl text-mint font-bold">always in your corner,</p>
+            <p class="font-handwriting text-2xl text-dark">your friend ✿</p>
+          </div>
+          
+          <img src="6 (1).png" alt="" class="absolute bottom-4 left-4 w-12 h-12 transform rotate-12 opacity-80 mix-blend-multiply">
+        </div>
+        
+        <div class="flex justify-center mt-12">
+          <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center gap-2 bg-white border border-mint/30 px-6 py-3 rounded-full shadow-sm text-mint font-ui font-semibold hover:bg-mint hover:text-white transition-colors">
+            <i data-feather="refresh-cw" class="w-4 h-4"></i> play it again
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Sticky Mini Player -->
+    <div id="mini-player">
+      <img src="file:///C:/Users/Admin/.gemini/antigravity/brain/62b02b85-977d-435f-960d-f28e45472837/polaroid_1_1785403266761.png" class="w-8 h-8 rounded object-cover" alt="mini cover">
+      <div class="flex-1 min-w-[120px]">
+        <p class="font-ui text-xs font-bold text-dark truncate">Our Song</p>
+        <div class="h-1 bg-mint/20 rounded-full mt-1 overflow-hidden">
+          <div id="mini-progress" class="h-full bg-mint" style="width: 0%"></div>
+        </div>
+      </div>
+      <button id="mini-play-btn" class="w-8 h-8 flex items-center justify-center text-mint hover:bg-mint/10 rounded-full transition-colors">
+        <i data-feather="play" class="w-4 h-4 fill-current"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <audio id="bg-audio" loop>
+    <source src="pehli.mpeg.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="script.js"></script>
+  <script>
+    feather.replace();
+  </script>
+</body>
+</html>
