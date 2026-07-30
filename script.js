@@ -1,5 +1,5 @@
-/document.addEventListener('DOMContentLoaded', () => {
-  // 1. Intro Screen & Initialization
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Elements Initialization
   const introScreen = document.getElementById('intro-screen');
   const mainContent = document.getElementById('main-content');
   const audio = document.getElementById('bg-audio');
@@ -13,7 +13,7 @@
   
   let isPlaying = false;
 
-  // Initialize Scratch Board immediately on page load
+  // Render Scratch Cards right away
   initScratchBoard();
 
   // Intro Tap Handler
@@ -25,10 +25,10 @@
         mainContent.style.display = 'block';
       }
       
-      // Re-trigger layout sync for scratch canvas after un-hiding
+      // Delay to ensure CSS sizing is loaded before canvas redraw
       setTimeout(() => {
-        refreshCanvasSizes();
-      }, 100);
+        setupCanvases();
+      }, 150);
 
       if (audio) {
         audio.play().then(() => {
@@ -135,31 +135,29 @@
 
     truths.forEach((truth, index) => {
       const container = document.createElement('div');
-      container.className = 'scratch-card-container';
+      container.className = 'scratch-card-container relative overflow-hidden rounded-xl bg-white shadow-md border-2 border-mint/20 h-28 flex items-center justify-center p-4 text-center cursor-pointer select-none';
       
       const content = document.createElement('div');
-      content.className = 'scratch-content';
+      content.className = 'scratch-content font-handwriting text-xl text-dark font-bold';
       content.innerText = truth;
       
       const canvas = document.createElement('canvas');
-      canvas.className = 'scratch-layer';
+      canvas.className = 'scratch-layer absolute inset-0 w-full h-full z-10 touch-none';
       
       container.appendChild(content);
       container.appendChild(canvas);
       scratchBoard.appendChild(container);
 
-      initScratchCanvas(canvas, index);
+      attachScratchEvents(canvas, index);
     });
   }
 
-  function refreshCanvasSizes() {
+  function setupCanvases() {
     const canvases = document.querySelectorAll('.scratch-layer');
     canvases.forEach(canvas => {
-      if (canvas.parentElement) {
-        canvas.width = canvas.parentElement.offsetWidth || 150;
-        canvas.height = canvas.parentElement.offsetHeight || 100;
-        drawCanvasOverlay(canvas);
-      }
+      canvas.width = canvas.parentElement.offsetWidth || 150;
+      canvas.height = canvas.parentElement.offsetHeight || 100;
+      drawCanvasOverlay(canvas);
     });
   }
 
@@ -168,6 +166,7 @@
     ctx.fillStyle = '#5E9E90';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
+    // Pattern dots
     ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
     for (let i = 0; i < 40; i++) {
       ctx.beginPath();
@@ -180,26 +179,20 @@
       ctx.fill();
     }
 
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+    // Scratch text overlay
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 15px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('scratch me ✿', canvas.width / 2, canvas.height / 2);
   }
 
-  function initScratchCanvas(canvas, index) {
+  function attachScratchEvents(canvas, index) {
     const ctx = canvas.getContext('2d');
-    
-    canvas.width = canvas.parentElement.offsetWidth || 150;
-    canvas.height = canvas.parentElement.offsetHeight || 100;
-    
-    drawCanvasOverlay(canvas);
-
     let isDrawing = false;
     let scratchedPixels = 0;
-    const brushSize = 25;
 
-    function getMousePos(evt) {
+    function getPos(evt) {
       const rect = canvas.getBoundingClientRect();
       const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
       const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
@@ -211,21 +204,16 @@
 
     function scratch(evt) {
       if (!isDrawing) return;
+      if (evt.type === 'touchmove') evt.preventDefault();
       
-      const pos = getMousePos(evt);
+      const pos = getPos(evt);
       ctx.globalCompositeOperation = 'destination-out';
       ctx.beginPath();
-      ctx.arc(pos.x, pos.y, brushSize, 0, Math.PI * 2);
+      ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
       ctx.fill();
       
-      checkScratched();
-    }
-
-    function checkScratched() {
-      if (cardsScratched.has(index)) return;
-      
       scratchedPixels++;
-      if (scratchedPixels > 25) { 
+      if (scratchedPixels > 20 && !cardsScratched.has(index)) {
         cardsScratched.add(index);
         canvas.style.transition = 'opacity 0.4s ease';
         canvas.style.opacity = '0';
@@ -238,14 +226,9 @@
     canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
     canvas.addEventListener('mousemove', scratch);
     canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('mouseleave', () => isDrawing = false);
 
-    canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, {passive: true});
-    canvas.addEventListener('touchmove', scratch, {passive: true});
+    canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+    canvas.addEventListener('touchmove', scratch);
     canvas.addEventListener('touchend', () => isDrawing = false);
   }
-}););
-
-  }
-
 });
