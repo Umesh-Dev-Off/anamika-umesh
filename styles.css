@@ -169,6 +169,10 @@ body {
   justify-content: center;
   align-items: center;
   padding: 20px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* Scratch Cards */
