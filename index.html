@@ -24,31 +24,6 @@
   <link rel="stylesheet" href="styles.css">
   <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
-<script>
-  function startExperience() {
-    const introScreen = document.getElementById('intro-screen');
-    const bgAudio = document.getElementById('bg-audio');
-
-    if (introScreen) {
-      // 1. Immediately disable pointer events so user clicks pass through
-      introScreen.style.pointerEvents = 'none';
-      introScreen.style.opacity = '0';
-
-      // 2. Remove from page layout after fade out
-      setTimeout(() => {
-        introScreen.style.display = 'none';
-      }, 500);
-    }
-
-    // 3. Play background audio safely
-    if (bgAudio) {
-      bgAudio.play().catch(err => {
-        console.log("Audio autoplay note:", err);
-      });
-    }
-  }
-</script>
-  
 </head>
 <body class="antialiased text-dark">
 
@@ -56,22 +31,22 @@
   <div id="app-container" class="bg-transparent flex flex-col relative pb-20 mx-auto">
     
     <!-- 1. Intro Screen -->
-    <div id="intro-screen" class="fixed inset-0 z-50 bg-[#E8F4F1] flex flex-col items-center justify-center cursor-pointer p-6 transition-opacity duration-500">
-  <div class="float-animation flex flex-col items-center">
-    <img src="hot_air_balloon_1785403225466.png" alt="Hot Air Balloon" class="w-48 h-48 object-contain mb-4">
-    <h1 class="font-serif-title text-4xl text-mint text-center px-4">Happy BestFriend Day</h1>
-    <p class="font-handwriting text-2xl text-sage mt-2">a delivery for you...</p>
-  </div>
-  
-  <div class="mt-8 bg-white rounded-2xl p-6 shadow-lg transform rotate-2 w-4/5 max-w-sm relative">
-    <div class="washi-tape"></div>
-    <p class="font-handwriting text-xl text-center">Hey You! I made a little something just for you... happy BestFriend day ✿</p>
-  </div>
+    <div id="intro-screen" class="cursor-pointer">
+      <div class="float-animation flex flex-col items-center">
+        <img src="hot_air_balloon_1785403225466.png" alt="Hot Air Balloon" class="w-48 h-48 object-contain mb-4">
+        <h1 class="font-serif-title text-4xl text-mint text-center px-4">Happy BestFriend Day</h1>
+        <p class="font-handwriting text-2xl text-sage mt-2">a delivery for you...</p>
+      </div>
+      
+      <div class="mt-12 bg-white rounded-2xl p-6 shadow-lg transform rotate-2 w-4/5 max-w-sm relative">
+        <div class="washi-tape"></div>
+        <p class="font-handwriting text-xl text-center">Hey You! I made a little something just for you... happy BestFriend day ✿</p>
+      </div>
 
-  <div class="absolute bottom-12 pulse-text font-ui text-sm tracking-widest text-peach font-bold">
-    TAP ANYWHERE TO BEGIN
-  </div>
-</div>
+      <div class="absolute bottom-12 pulse-text font-ui text-sm tracking-widest text-peach font-bold">
+        TAP ANYWHERE TO BEGIN
+      </div>
+    </div>
 
     <!-- 2. Navigation Header -->
     <header class="sticky top-0 z-40 bg-[#E8F4F1]/90 backdrop-blur-md px-4 py-4 flex justify-between items-center border-b border-mint/10">
@@ -241,7 +216,7 @@
 
     <!-- Sticky Mini Player -->
     <div id="mini-player">
-      <img src="file:///C:/Users/Admin/.gemini/antigravity/brain/62b02b85-977d-435f-960d-f28e45472837/polaroid_1_1785403266761.png" class="w-8 h-8 rounded object-cover" alt="mini cover">
+      <img src="polaroid_1_1785403266761.png" class="w-8 h-8 rounded object-cover" alt="mini cover">
       <div class="flex-1 min-w-[120px]">
         <p class="font-ui text-xs font-bold text-dark truncate">Our Song</p>
         <div class="h-1 bg-mint/20 rounded-full mt-1 overflow-hidden">
@@ -259,7 +234,7 @@
     <source src="pehli.mpeg.mp3" type="audio/mpeg">
   </audio>
 
-  <script src="script.js"></script>
+  <script type="module" src="/script.js"></script>
   <script>
     feather.replace();
   </script>
