@@ -1,19 +1,9 @@
-// script.js
-
-document.addEventListener('DOMContentLoaded', () => {
+/document.addEventListener('DOMContentLoaded', () => {
   // 1. Intro Screen & Initialization
   const introScreen = document.getElementById('intro-screen');
+  const mainContent = document.getElementById('main-content');
   const audio = document.getElementById('bg-audio');
   
-  introScreen.addEventListener('click', () => {
-    introScreen.classList.add('hidden');
-    // Attempt to play audio on first interaction
-    audio.play().then(() => {
-      updatePlayState(true);
-    }).catch(e => console.log('Audio autoplay prevented', e));
-  });
-
-  // 2. Audio Player Logic
   const mainPlayBtn = document.getElementById('main-play-btn');
   const miniPlayBtn = document.getElementById('mini-play-btn');
   const progressBar = document.getElementById('progress-bar');
@@ -22,42 +12,83 @@ document.addEventListener('DOMContentLoaded', () => {
   const timeTotal = document.getElementById('time-total');
   let isPlaying = false;
 
+  introScreen.addEventListener('click', () => {
+    introScreen.classList.add('hidden');
+    if (mainContent) {
+      mainContent.classList.remove('hidden');
+    }
+    
+    // Canvas sizing delayed to let CSS render fully
+    setTimeout(() => {
+      document.querySelectorAll('.scratch-layer').forEach((canvas) => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        drawCanvasOverlay(canvas);
+      });
+    }, 150);
+
+    // Attempt to play audio on first interaction
+    if (audio) {
+      audio.play().then(() => {
+        updatePlayState(true);
+      }).catch(e => console.log('Audio autoplay prevented', e));
+    }
+  });
+
+  // 2. Audio Player Logic
   function updatePlayState(playing) {
     isPlaying = playing;
     const icon = isPlaying ? 'pause' : 'play';
-    mainPlayBtn.innerHTML = `<i data-feather="${icon}" class="${isPlaying?'':'ml-1'} fill-current w-5 h-5"></i>`;
-    miniPlayBtn.innerHTML = `<i data-feather="${icon}" class="${isPlaying?'':'ml-0.5'} fill-current w-4 h-4"></i>`;
-    feather.replace();
+    if (mainPlayBtn) {
+      mainPlayBtn.innerHTML = `<i data-feather="${icon}" class="${isPlaying ? '' : 'ml-1'} fill-current w-5 h-5"></i>`;
+    }
+    if (miniPlayBtn) {
+      miniPlayBtn.innerHTML = `<i data-feather="${icon}" class="${isPlaying ? '' : 'ml-0.5'} fill-current w-4 h-4"></i>`;
+    }
+    if (window.feather) {
+      feather.replace();
+    }
   }
 
   function togglePlay() {
+    if (!audio) return;
     if (isPlaying) {
       audio.pause();
       updatePlayState(false);
     } else {
-      audio.play();
-      updatePlayState(true);
+      audio.play().then(() => {
+        updatePlayState(true);
+      }).catch(e => console.log('Playback error', e));
     }
   }
 
-  mainPlayBtn.addEventListener('click', togglePlay);
-  miniPlayBtn.addEventListener('click', togglePlay);
+  if (mainPlayBtn) mainPlayBtn.addEventListener('click', togglePlay);
+  if (miniPlayBtn) miniPlayBtn.addEventListener('click', togglePlay);
 
-  audio.addEventListener('loadedmetadata', () => {
-    progressBar.max = audio.duration;
-    timeTotal.textContent = formatTime(audio.duration);
-  });
+  if (audio) {
+    audio.addEventListener('loadedmetadata', () => {
+      if (progressBar) progressBar.max = audio.duration;
+      if (timeTotal) timeTotal.textContent = formatTime(audio.duration);
+    });
 
-  audio.addEventListener('timeupdate', () => {
-    progressBar.value = audio.currentTime;
-    const percent = (audio.currentTime / audio.duration) * 100;
-    miniProgress.style.width = `${percent}%`;
-    timeCurrent.textContent = formatTime(audio.currentTime);
-  });
+    audio.addEventListener('timeupdate', () => {
+      if (!audio.duration) return;
+      if (progressBar) progressBar.value = audio.currentTime;
+      const percent = (audio.currentTime / audio.duration) * 100;
+      if (miniProgress) miniProgress.style.width = `${percent}%`;
+      if (timeCurrent) timeCurrent.textContent = formatTime(audio.currentTime);
+    });
 
-  progressBar.addEventListener('input', () => {
-    audio.currentTime = progressBar.value;
-  });
+    audio.addEventListener('ended', () => {
+      updatePlayState(false);
+    });
+  }
+
+  if (progressBar && audio) {
+    progressBar.addEventListener('input', () => {
+      audio.currentTime = progressBar.value;
+    });
+  }
 
   function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
@@ -71,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const audioWidget = document.querySelector('.audio-player-widget');
   
   window.addEventListener('scroll', () => {
-    if (!audioWidget) return;
+    if (!audioWidget || !miniPlayer) return;
     const rect = audioWidget.getBoundingClientRect();
     if (rect.bottom < 0) {
       miniPlayer.classList.add('visible');
@@ -80,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 4. Scratch Cards Logic
+  // 4. Original Scratch Cards Logic
   const scratchBoard = document.getElementById('scratch-board');
   const scratchCounter = document.getElementById('scratch-counter');
   
@@ -112,40 +143,46 @@ document.addEventListener('DOMContentLoaded', () => {
     
     container.appendChild(content);
     container.appendChild(canvas);
-    scratchBoard.appendChild(container);
+    if (scratchBoard) {
+      scratchBoard.appendChild(container);
+    }
 
     initScratchCanvas(canvas, index);
   });
 
+  function drawCanvasOverlay(canvas) {
+    const ctx = canvas.getContext('2d');
+    
+    // Fill with mint green and dots
+    ctx.fillStyle = '#5E9E90';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    for (let i = 0; i < 50; i++) {
+      ctx.beginPath();
+      ctx.arc(
+        Math.random() * canvas.width, 
+        Math.random() * canvas.height, 
+        2 + Math.random() * 3, 
+        0, Math.PI * 2
+      );
+      ctx.fill();
+    }
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.font = '14px "Plus Jakarta Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('scratch me', canvas.width / 2, canvas.height / 2);
+  }
+
   function initScratchCanvas(canvas, index) {
     const ctx = canvas.getContext('2d');
     
-    // Set actual canvas size based on CSS size
-    // Delay slightly to let CSS render
+    // Initial sizing draw
     setTimeout(() => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      
-      // Fill with mint green and dots
-      ctx.fillStyle = '#5E9E90';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-      for (let i = 0; i < 50; i++) {
-        ctx.beginPath();
-        ctx.arc(
-          Math.random() * canvas.width, 
-          Math.random() * canvas.height, 
-          2 + Math.random() * 3, 
-          0, Math.PI * 2
-        );
-        ctx.fill();
-      }
-
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-      ctx.font = '14px "Plus Jakarta Sans"';
-      ctx.textAlign = 'center';
-      ctx.fillText('scratch me', canvas.width/2, canvas.height/2);
+      canvas.width = canvas.offsetWidth || 150;
+      canvas.height = canvas.offsetHeight || 100;
+      drawCanvasOverlay(canvas);
     }, 100);
 
     let isDrawing = false;
@@ -164,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function scratch(evt) {
       if (!isDrawing) return;
-      evt.preventDefault();
+      if (evt.type === 'touchmove') evt.preventDefault();
       
       const pos = getMousePos(evt);
       ctx.globalCompositeOperation = 'destination-out';
@@ -178,14 +215,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkScratched() {
       if (cardsScratched.has(index)) return;
       
-      // Simple heuristic: if we scratched a bunch, reveal the rest
       scratchedPixels++;
-      if (scratchedPixels > 40) { // arbitrary threshold of stroke events
+      if (scratchedPixels > 25) { 
         cardsScratched.add(index);
         canvas.style.transition = 'opacity 0.5s';
         canvas.style.opacity = '0';
         uncoveredCount++;
-        scratchCounter.innerText = uncoveredCount;
+        if (scratchCounter) scratchCounter.innerText = uncoveredCount;
         setTimeout(() => canvas.remove(), 500);
       }
     }
